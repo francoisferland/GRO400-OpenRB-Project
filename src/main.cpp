@@ -1,3 +1,11 @@
+// GRO400 - Exemple d'utilisation du OpenRB avec un moteur Dynamixel sous Platform.IO.
+// Basé sur l'exemple de Position Control.
+// Opère un moteur (à définir par la variable DXL_ID - 1 par défaut) en position en le faisant passer
+// d'une position en pulsations (1000) à une autre en degrés (5.7) et vice-versa à chaque
+// seconde.
+// Écrit la position en cours en pulsations à la console série (accessible par DEBUG_SERIAL).
+// N'oubliez-pas de configurer votre port série pour cette console à 115200 bauds.
+
 #include <Dynamixel2Arduino.h>
 
 // Please modify it to suit your hardware.
@@ -36,8 +44,9 @@
   const int DXL_DIR_PIN = 2; // DYNAMIXEL Shield DIR PIN
 #endif
  
+// TODO: À changer selon l'ID de votre moteur :
+const uint8_t DXL_ID = 1;
 
-const uint8_t DXL_ID = 2;
 const float DXL_PROTOCOL_VERSION = 2.0;
 
 Dynamixel2Arduino dxl(DXL_SERIAL, DXL_DIR_PIN);
@@ -47,12 +56,12 @@ using namespace ControlTableItem;
 
 void setup() {
   // put your setup code here, to run once:
-  delay(2000);
+  delay(2000);    // Délai additionnel pour avoir le temps de lire les messages sur la console.
   DEBUG_SERIAL.println("Starting position control ...");
   
   // Use UART port of DYNAMIXEL Shield to debug.
   DEBUG_SERIAL.begin(115200);
-  while(!DEBUG_SERIAL);
+  while(!DEBUG_SERIAL); // On attend que la communication série pour les messages soit prête.
 
   // Set Port baudrate to 57600bps. This has to match with DYNAMIXEL baudrate.
   dxl.begin(57600);
@@ -97,7 +106,6 @@ void loop() {
   // Set Goal Position in RAW value
   dxl.setGoalPosition(DXL_ID, 1000);
 
-  delay(10000);
   int i_present_position = 0;
   float f_present_position = 0.0;
 
